@@ -1,0 +1,153 @@
+{% extends "base.html" %} 
+{% block styles %} 
+{{super()}}
+<style>
+  .form-signin input[type="text"] {
+    margin-bottom: 0px;
+  }
+  .form-signin {
+    max-width: 800px;
+    padding: 1rem;
+  }
+</style>
+{% endblock %} 
+{% block title %}Make new post{% endblock %} 
+{% block content %}
+{% include "navbar.html" %}
+<div class="container mt-md-5 pt-md-5">
+  <div class="container mt-5 pt-5">
+    <main class="form-signin w-100 m-auto mt-5">
+      <form action="{{url_for('make_post')}}" method="post">
+        <h1 class="h3 mb-3 fw-bold text-light">Post new cafe</h1>
+        <div class="row">
+          <div class="col-md-6 pe-md-1">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control mt-2"
+                id="Cafename"
+                name="cafename"
+                placeholder="Cafe name"
+                required
+              />
+              <label for="Cafename">Cafe name</label>
+            </div>
+          </div>
+          <div class="col-md-6 ps-md-1">
+            <div class="form-floating">
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                class="form-control mt-2"
+                id="Price"
+                name="price"
+                placeholder="Coffee price"
+                required
+              />
+              <label for="Price">Coffee price</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 pe-md-1">
+            <div class="form-floating">
+              <input
+                type="url"
+                class="form-control mt-2"
+                id="Mapurl"
+                name="mapurl"
+                placeholder="Map URL"
+                required
+              />
+              <label for="Mapurl">Map URL</label>
+            </div>
+          </div>
+          <div class="col-md-6 ps-md-1">
+            <div class="form-floating mt-2">
+              <input
+                type="url"
+                class="form-control"
+                id="Imgurl"
+                name="imgurl"
+                placeholder="IMG URL"
+                required
+              />
+              <label for="Imgurl">Image URL</label>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-floating mt-2">
+            <input
+              type="text"
+              class="form-control"
+              id="Location"
+              name="location"
+              placeholder="Location"
+              required
+            />
+            <label for="Location">Location</label>
+          </div>
+        </div>
+        <select
+          class="form-select mt-2"
+          aria-label="Sockets select"
+          name="sockets"
+        >
+          <optgroup label="Has sockets?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </optgroup>
+        </select>
+        <select
+          class="form-select mt-2"
+          aria-label="Toilets select"
+          name="toilets"
+        >
+          <optgroup label="Has toilets?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </optgroup>
+        </select>
+        <select class="form-select mt-2" aria-label="Wi fi select" name="wifi">
+          <optgroup label="Has Wi Fi?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </optgroup>
+        </select>
+        <select class="form-select mt-2" aria-label="Calls select" name="calls">
+          <optgroup label="Takes calls?">
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </optgroup>
+        </select>
+        <select
+          class="form-select mt-2 mb-2"
+          aria-label="Seats select"
+          name="seats"
+        >
+          <optgroup label="Number of seats">
+            <option value="0-10">0-10</option>
+            <option value="10-20">10-20</option>
+            <option value="20-30">20-30</option>
+            <option value="30-40">30-40</option>
+            <option value="40-50">40-50</option>
+            <option value="50+">50+</option>
+          </optgroup>
+        </select>
+        <button class="btn w-100 py-2 sign-btn" type="submit">Submit</button>
+      </form>
+      {% with messages = get_flashed_messages() %} 
+      {% if messages %} 
+      {% for message in messages %}
+      <div class="alert alert-danger mt-2 text-center" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %} 
+      {% endif %} 
+      {% endwith %}
+    </main>
+  </div>
+</div>
+{% endblock %}

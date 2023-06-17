@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+{% block title %}Log in{% endblock %} 
+{% block content%} 
+{% include "navbar.html" %}
+<div class="container mt-5 pt-5">
+  <div class="container mt-5 pt-5">
+    <main class="form-signin w-100 m-auto mt-5">
+      <form action="{{url_for('login')}}" method="post">
+        <h1 class="h3 mb-3 fw-bold text-light">Please log in</h1>
+        <div class="form-floating">
+          <input
+            type="email"
+            class="form-control"
+            id="Email"
+            name="Email"
+            placeholder="name@example.com"
+            required
+          />
+          <label for="Email">Email address</label>
+        </div>
+        <div class="form-floating">
+          <input
+            type="password"
+            class="form-control"
+            id="Password"
+            name="Password"
+            placeholder="Password"
+            required
+          />
+          <label for="Password">Password</label>
+        </div>
+        <button class="btn w-100 py-2 sign-btn" type="submit">Log in</button>
+      </form>
+      {% with messages = get_flashed_messages() %} 
+      {% if messages %} 
+      {% for message in messages %}
+      <div class="alert alert-danger mt-2 text-center" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %} 
+      {% endif %} 
+      {% endwith %}
+    </main>
+  </div>
+</div>
+{% endblock %}
