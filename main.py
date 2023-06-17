@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, abort
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import INT4RANGE
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -9,9 +10,9 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("flask_blog_secretkey")
 # Sqlite DB
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cafes.db"
-# Postgre DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("cafe_database")
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cafes.db"
+# PostgreSQL DB
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("cafe_database")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 Bootstrap5(app)
@@ -41,15 +42,17 @@ class Cafes(db.Model):
     __tablename__ = "cafe"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250))
-    map_url = db.Column(db.String(250))
-    img_url = db.Column(db.String(250))
+    map_url = db.Column(db.String)
+    img_url = db.Column(db.String)
     location = db.Column(db.String(250))
     has_sockets = db.Column(db.Integer)
     has_toilet = db.Column(db.Integer)
     has_wifi = db.Column(db.Integer)
     can_take_calls = db.Column(db.Integer)
-    seats = db.Column(db.Integer)
-    coffee_price = db.Column(db.Integer)
+    seats = db.Column(INT4RANGE)
+    coffee_price = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('Users', back_populates='cafes')
 
 
 class Users(UserMixin, db.Model):
@@ -58,6 +61,7 @@ class Users(UserMixin, db.Model):
     name = db.Column(db.String(250))
     email = db.Column(db.String(250), unique=True)
     password = db.Column(db.String(250))
+    cafes = db.relationship('Cafes', back_populates='user')
 
 
 @app.route("/")
@@ -118,7 +122,6 @@ def logout():
 def make_post():
     if request.method == "POST":
         name = request.form.get("cafename")
-        price = "£" + request.form.get("price").replace(",", ".")
         new_cafe = Cafes(
             name=name,
             map_url=request.form.get("mapurl"),
@@ -129,7 +132,8 @@ def make_post():
             has_wifi=request.form.get("wifi"),
             can_take_calls=request.form.get("calls"),
             seats=request.form.get("seats"),
-            coffee_price=price
+            coffee_price=request.form.get("price"),
+            user_id=current_user.id
         )
         if db.session.query(Cafes).filter_by(name=name).first():
             flash("Cafe already registered.")
@@ -149,6 +153,28 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('home'))
+
+
+@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@login_required
+def edit_post(post_id):
+    post = Cafes.query.get(post_id)
+    if post.user_id != current_user.id and current_user.id != 1:
+        return abort(403, "Access denied. You can only edit your own posts.")
+    if request.method == "POST":
+        post.name = request.form.get("cafename")
+        post.map_url = request.form.get("mapurl")
+        post.img_url = request.form.get("imgurl")
+        post.location = request.form.get("location"),
+        post.has_sockets = request.form.get("sockets"),
+        post.has_toilet = request.form.get("toilets"),
+        post.has_wifi = request.form.get("wifi"),
+        post.can_take_calls = request.form.get("calls"),
+        post.seats = request.form.get("seats"),
+        post.coffee_price = request.form.get("price")
+        db.session.commit()
+        return redirect(url_for("home"))
+    return render_template("edit_post.html", post=post)
 
 
 if __name__ == "__main__":

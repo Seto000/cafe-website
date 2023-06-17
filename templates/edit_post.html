@@ -1,5 +1,5 @@
-{% extends "base.html" %} 
-{% block styles %} 
+{% extends "base.html" %}
+{% block styles %}
 {{super()}}
 <style>
   .form-signin input[type="text"] {
@@ -10,15 +10,15 @@
     padding: 1rem;
   }
 </style>
-{% endblock %} 
-{% block title %}Make new post{% endblock %} 
+{% endblock %}
+{% block title %}Edit a post{% endblock %}
 {% block content %}
 {% include "navbar.html" %}
 <div class="container mt-md-5 pt-md-5">
   <div class="container mt-5 pt-5">
     <main class="form-signin w-100 m-auto mt-5">
-      <form action="{{url_for('make_post')}}" method="post">
-        <h1 class="h3 mb-3 fw-bold text-light">Post new cafe</h1>
+      <form action="{{ url_for('edit_post', post_id=post.id) }}" method="post">
+        <h1 class="h3 mb-3 fw-bold text-light">Edit Cafe</h1>
         <div class="row">
           <div class="col-md-6 pe-md-1">
             <div class="form-floating">
@@ -28,6 +28,7 @@
                 id="Cafename"
                 name="cafename"
                 placeholder="Cafe name"
+                value="{{ post.name }}"
                 required
               />
               <label for="Cafename">Cafe name</label>
@@ -43,6 +44,7 @@
                 id="Price"
                 name="price"
                 placeholder="Coffee price"
+                value="{{ post.coffee_price }}"
                 required
               />
               <label for="Price">Coffee price in £</label>
@@ -58,6 +60,7 @@
                 id="Mapurl"
                 name="mapurl"
                 placeholder="Map URL"
+                value="{{ post.map_url }}"
                 required
               />
               <label for="Mapurl">Map URL</label>
@@ -71,6 +74,7 @@
                 id="Imgurl"
                 name="imgurl"
                 placeholder="IMG URL"
+                value="{{ post.img_url }}"
                 required
               />
               <label for="Imgurl">Image URL</label>
@@ -85,6 +89,7 @@
               id="Location"
               name="location"
               placeholder="Location"
+              value="{{ post.location }}"
               required
             />
             <label for="Location">Location</label>
@@ -96,8 +101,8 @@
           name="sockets"
         >
           <optgroup label="Has sockets?">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0" {% if post.has_sockets == 0 %}selected{% endif %}>No</option>
+            <option value="1" {% if post.has_sockets == 1 %}selected{% endif %}>Yes</option>
           </optgroup>
         </select>
         <select
@@ -106,20 +111,20 @@
           name="toilets"
         >
           <optgroup label="Has toilets?">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0" {% if post.has_toilet == 0 %}selected{% endif %}>No</option>
+            <option value="1" {% if post.has_toilet == 1 %}selected{% endif %}>Yes</option>
           </optgroup>
         </select>
         <select class="form-select mt-2" aria-label="Wi fi select" name="wifi">
           <optgroup label="Has Wi Fi?">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0" {% if post.has_wifi == 0 %}selected{% endif %}>No</option>
+            <option value="1" {% if post.has_wifi == 1 %}selected{% endif %}>Yes</option>
           </optgroup>
         </select>
         <select class="form-select mt-2" aria-label="Calls select" name="calls">
           <optgroup label="Takes calls?">
-            <option value="0">No</option>
-            <option value="1">Yes</option>
+            <option value="0" {% if post.can_take_calls == 0 %}selected{% endif %}>No</option>
+            <option value="1" {% if post.can_take_calls == 1 %}selected{% endif %}>Yes</option>
           </optgroup>
         </select>
         <select
@@ -128,26 +133,27 @@
           name="seats"
         >
           <optgroup label="Number of seats">
-            <option value="[0, 9]">0-10</option>
-            <option value="[10, 19]">10-20</option>
-            <option value="[20, 29]">20-30</option>
-            <option value="[30, 39]">30-40</option>
-            <option value="[40, 49]">40-50</option>
-            <option value="[50,]">50+</option>
+            <option value="[0, 9]" {% if post.seats == '[0, 9]' %}selected{% endif %}>0-10</option>
+            <option value="[10, 19]" {% if post.seats == '[10, 19]' %}selected{% endif %}>10-20</option>
+            <option value="[20, 29]" {% if post.seats == '[20, 29]' %}selected{% endif %}>20-30</option>
+            <option value="[30, 39]" {% if post.seats == '[30, 39]' %}selected{% endif %}>30-40</option>
+            <option value="[40, 49]" {% if post.seats == '[40, 49]' %}selected{% endif %}>40-50</option>
+            <option value="[50,]" {% if post.seats == '[50,]' %}selected{% endif %}>50+</option>
           </optgroup>
         </select>
-        <button class="btn w-100 py-2 sign-btn" type="submit">Submit</button>
+        <button class="btn w-100 py-2 sign-btn" type="submit">Update</button>
       </form>
-      {% with messages = get_flashed_messages() %} 
-      {% if messages %} 
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
       {% for message in messages %}
       <div class="alert alert-danger mt-2 text-center" role="alert">
         {{ message }}
       </div>
-      {% endfor %} 
-      {% endif %} 
+      {% endfor %}
+      {% endif %}
       {% endwith %}
     </main>
   </div>
 </div>
+
 {% endblock %}

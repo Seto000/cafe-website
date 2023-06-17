@@ -25,8 +25,12 @@
             <li class="list-group-item">
               Takes calls: {% if cafe.can_take_calls == 1 %}Yes{% else %}No{% endif %}
             </li>
-            <li class="list-group-item">Seats: {{cafe.seats}}</li>
-            <li class="list-group-item">Coffee Price: {{cafe.coffee_price}}</li>
+            {% if cafe.seats.lower == 50 %}
+            <li class="list-group-item">Seats: 50+</li>
+            {% else %}
+            <li class="list-group-item">Seats: {{cafe.seats.lower }}-{{cafe.seats.upper }}</li>
+            {% endif %}
+            <li class="list-group-item">Coffee Price: £{{cafe.coffee_price}}</li>
           </ul>
           <div class="card-body">
             <a href="{{cafe.map_url}}" target="_blank" class="card-link"
@@ -38,7 +42,15 @@
               class="float-end"
               style="text-decoration: none; color: #a18262"
               onclick="return confirm('Are you sure you want to delete this post?')"
-              >✘</a
+              >Delete</a
+            >
+            {% endif %}
+            {% if current_user.id == cafe.user_id or current_user.id == 1 %}
+            <a
+              href="{{url_for('edit_post', post_id=cafe.id) }}"
+              class="float-end me-2"
+              style="text-decoration: none; color: #a18262"
+              >Edit</a
             >
             {% endif %}
           </div>
