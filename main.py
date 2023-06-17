@@ -8,7 +8,10 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("flask_blog_secretkey")
+# Sqlite DB
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///cafes.db"
+# Postgre DB
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("cafe_database")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 Bootstrap5(app)
