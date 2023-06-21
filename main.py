@@ -64,11 +64,15 @@ class Users(UserMixin, db.Model):
     cafes = db.relationship('Cafes', back_populates='user')
 
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def home():
     page = request.args.get("page", 1, type=int)
-    cafes = Cafes.query.paginate(per_page=9, page=page)
-    return render_template("index.html", cafes=cafes)
+    search_query = request.args.get("search_query", "")
+    if request.method == "POST":
+        search_query = request.form.get("Search").strip()
+        return redirect(url_for('home', page=page, search_query=search_query))
+    cafes = Cafes.query.filter(Cafes.name.ilike(f"%{search_query}%")).paginate(per_page=9, page=page)
+    return render_template("index.html", cafes=cafes, search_query=search_query)
 
 
 @app.route("/users/login", methods=["POST", "GET"])
@@ -155,7 +159,7 @@ def delete_post(post_id):
     return redirect(url_for('home'))
 
 
-@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@app.route("/edit-post/<int:post_id>", methods=["POST", "GET"])
 @login_required
 def edit_post(post_id):
     post = Cafes.query.get(post_id)
@@ -178,4 +182,4 @@ def edit_post(post_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

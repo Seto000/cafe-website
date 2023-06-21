@@ -15,6 +15,14 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+          <li class="nav-items">
+            <form action="{{url_for('home', search_query=search_query)}}" method="post">
+            <div class="input-group mt-lg-0 mt-2">
+              <input type="text" class="form-control" placeholder="Cafe name" aria-label="Cafe name" aria-describedby="button-addon2" name="Search" required>
+              <button class="btn" type="submit" id="button-addon2">Search</button>
+            </div>
+            </form>
+          </li>
           {% if not current_user.is_authenticated %}
           <li class="nav-item">
             <a type="button" class="btn" href="{{url_for('register')}}"
