@@ -3,6 +3,14 @@
 {% block content %}
 {% include "navbar.html" %}
 <section class="py-5 py-xl-6">
+  {% if not cafes.items %}
+  <div class="container px-4 py-5">
+    <div class="row align-items-stretch g-4 py-5">
+      <p class="h3 fw-bold text-light text-center">No results found for: {{ search_query }}</p>
+    </div>
+  {% set bottom_fixed = "fixed-bottom" %}
+  {% else %}
+  </div>
   <div class="container px-4 py-5">
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       {% for cafe in cafes %}
@@ -58,6 +66,8 @@
       </div>
       {% endfor %}
     </div>
+    {% endif %}
+    {% if cafes.items %}
     <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
     <li class="page-item">
@@ -91,7 +101,7 @@
     </li>
   </ul>
 </nav>
-
+    {% endif %}
   </div>
 </section>
 {% include "footer.html" %} 
