@@ -29,6 +29,12 @@
           />
           <label for="Password">Password</label>
         </div>
+        <div class="form-check text-start my-3 text-white">
+      <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault" name="Remember">
+      <label class="form-check-label" for="flexCheckDefault">
+        Remember me
+      </label>
+    </div>
         <button class="btn w-100 py-2 sign-btn" type="submit">Log in</button>
       </form>
       {% with messages = get_flashed_messages() %} 

@@ -80,9 +80,10 @@ def login():
     if request.method == "POST":
         email = request.form.get("Email")
         user = db.session.query(Users).filter_by(email=email).first()
+        remember_me = request.form.get("Remember")
         if user:
             if check_password_hash(user.password, request.form.get("Password")):
-                login_user(user)
+                login_user(user, remember=True if remember_me == "remember-me" else False)
                 return redirect(url_for("home"))
             else:
                 flash("Wrong credentials - Try again.")
